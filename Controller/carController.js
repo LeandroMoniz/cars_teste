@@ -89,19 +89,7 @@ module.exports = class carController {
             res.status(500).json({ error: 'Erro ao acessar a API externa' });
         }
     }
-
-    static async getAll(req, res) {
-        try {
-            const response = await axios.get(apiUrl);
-            const data = response.data;
-            res.status(200).json(data);
-        } catch (error) {
-            console.error('Erro ao acessar a API:', error);
-            res.status(500).json({ error: 'Erro ao acessar a API externa' });
-        }
-    };
-
-
+    // GET Logs
     static async getLog(req, res) {
         const logs = await Log.find().sort('-createdAt')
 
@@ -110,7 +98,29 @@ module.exports = class carController {
         })
 
     }
+    // GET Cars Cadastrados 
+    static async getCars(req, res) {
+        const Cars = await Car.find().sort('-createdAt')
 
+        res.status(200).json({
+            Cars: Cars,
+        })
+    }
+    // GET ALL 
+    static async getAllCars(req, res) {
+        try {
+            const carsFromDB = await Car.find().sort('-createdAt');
+            const response = await axios.get(apiUrl);
+            const carsFromApi = response.data;
+
+            const combinedCars = [...carsFromDB, ...carsFromApi];
+            res.status(200).json(combinedCars)
+
+        } catch (error) {
+            console.error('Erro ao buscar carros:', error);
+            res.status(500).json({ error: 'Erro ao buscar carros' })
+        }
+    }
 
 
 
