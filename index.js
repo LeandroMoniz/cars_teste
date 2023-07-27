@@ -15,6 +15,6 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 const carRoutes = require('./Router/carRoutes')
 
 
-app.use('/cars', carRoutes)
+app.use('/api', carRoutes)
 
 app.listen(5000) // 5000 para o backend e 3000 para frontend
