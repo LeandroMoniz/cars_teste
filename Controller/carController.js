@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const Car = require('../models/car.js')
+const Log = require('../models/Log.js')
 
 const apiUrl = 'http://api-test.bhut.com.br:3000/api/cars';
 
@@ -62,16 +63,23 @@ module.exports = class carController {
             const response = await axios.post(apiUrl, data);
 
             const retorno = response.data;
-            console.log("aqui", retorno.length)
 
             const car = new Car({
                 _id: retorno._id,
                 title: retorno.title,
+                brand: retorno.brand,
                 price: retorno.price,
+                age: retorno.age,
             })
 
-            //Salva no banco
+            //Salva no banco modelos dos carros 
             const newCar = await car.save()
+
+            const log = new Log({
+                car_id: newCar._id
+            })
+            // Salva os logs
+            await log.save()
 
             res.status(200).json({ message: 'Dados enviados com sucesso para a API externa!' });
 
@@ -92,6 +100,16 @@ module.exports = class carController {
             res.status(500).json({ error: 'Erro ao acessar a API externa' });
         }
     };
+
+
+    static async getLog(req, res) {
+        const logs = await Log.find().sort('-createdAt')
+
+        res.status(200).json({
+            logs: logs,
+        })
+
+    }
 
 
 

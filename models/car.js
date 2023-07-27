@@ -17,6 +17,14 @@ const Car = mongoose.model(
             price: {
                 type: Number,
                 required: true,
+            },
+            brand: {
+                type: String,
+                required: true,
+            },
+            age: {
+                type: Number,
+                required: true,
             }
         },
         { timestamps: true },
